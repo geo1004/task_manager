@@ -1,7 +1,5 @@
-task_manager
+Simple Task Manager (a Backbone.js practice)
 ============
-
-task_manager
 
 This is a task manager app. The purpose is mainly to train myself to the backbone.js framework.
 The app has to be simple.
