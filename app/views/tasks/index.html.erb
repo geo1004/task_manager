@@ -1,0 +1,12 @@
+<div id="tasks"></div>
+
+<div id="sortable_tasks">
+
+</div>
+
+<script type="text/javascript">
+$(function() {
+  window.router = new TaskManager.Routers.TasksRouter({tasks: <%= @tasks.to_json.html_safe -%>});
+  Backbone.history.start();
+});
+</script>
