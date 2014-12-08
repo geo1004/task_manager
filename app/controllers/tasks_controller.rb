@@ -5,6 +5,9 @@ class TasksController < ApplicationController
   # GET /tasks.json
   def index
     @tasks = Task.all
+    @tasks_draft = Task.where(state: 'draft').all
+    @tasks_in_progress = Task.where(state: 'inprogress').all
+    @tasks_finished = Task.where(state: 'finished').all
   end
 
   # GET /tasks/1

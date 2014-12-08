@@ -1,12 +1,23 @@
-<div id="tasks"></div>
-
-<div id="sortable_tasks">
-
+<div class="banner">
+  <h1>Lightweight Task Manager</h1>
 </div>
+
+<div id="new_task"></div>
+
+<div id="task_draft"></div>
+
+<div id="task_in_progress"></div>
+
+<div id="task_finished"></div>
 
 <script type="text/javascript">
 $(function() {
-  window.router = new TaskManager.Routers.TasksRouter({tasks: <%= @tasks.to_json.html_safe -%>});
+  window.router = new TaskManager.Routers.TasksRouter({
+    tasks: <%= @tasks.to_json.html_safe -%>,
+    tasks_draft: <%= @tasks_draft.to_json.html_safe -%>,
+    tasks_in_progress: <%= @tasks_in_progress.to_json.html_safe -%>,
+    tasks_finished: <%= @tasks_finished.to_json.html_safe -%>
+  });
   Backbone.history.start();
 });
 </script>

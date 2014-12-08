@@ -14,6 +14,7 @@ class TaskManager.Views.Tasks.NewView extends Backbone.View
       this.render()
     )
 
+
   save: (e) ->
     e.preventDefault()
     e.stopPropagation()
@@ -22,8 +23,9 @@ class TaskManager.Views.Tasks.NewView extends Backbone.View
 
     @collection.create(@model.toJSON(),
       success: (task) =>
-        @model = task
-        window.location.hash = "/#{@model.id}"
+        _.each $('#new-task').find('input[type="text"]'), (el) ->
+          $(el).val('')
+        $('#new-task').find('textarea').val('')
 
       error: (task, jqXHR) =>
         @model.set({errors: $.parseJSON(jqXHR.responseText)})

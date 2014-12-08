@@ -11,11 +11,14 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery-ui
 //= require jquery_ujs
+//= require twitter/bootstrap
 //= require turbolinks
 //= require underscore
 //= require backbone
 //= require backbone_rails_sync
 //= require backbone_datalink
 //= require backbone/task_manager
+//= require jquery-ui/sortable
 //= require_tree .

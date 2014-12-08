@@ -1,31 +1,24 @@
 class TaskManager.Routers.TasksRouter extends Backbone.Router
   initialize: (options) ->
-    @tasks = new TaskManager.Collections.TasksCollection()
-    @tasks.reset options.tasks
+    @tasks_draft = new TaskManager.Collections.TasksCollection()
+    @tasks_in_progress = new TaskManager.Collections.TasksCollection()
+    @tasks_finished = new TaskManager.Collections.TasksCollection()
+
+    @tasks_draft.reset options.tasks_draft
+    @tasks_in_progress.reset options.tasks_in_progress
+    @tasks_finished.reset options.tasks_finished
 
   routes:
-    "new"      : "newTask"
     "index"    : "index"
-    ":id/edit" : "edit"
-    ":id"      : "show"
     ".*"        : "index"
 
-  newTask: ->
-    @view = new TaskManager.Views.Tasks.NewView(collection: @tasks)
-    $("#tasks").html(@view.render().el)
-
   index: ->
-    @view = new TaskManager.Views.Tasks.IndexView(tasks: @tasks)
-    $("#tasks").html(@view.render().el)
+    @view = new TaskManager.Views.Tasks.NewView(collection: @tasks_draft)
+    @draftView = new TaskManager.Views.Tasks.DraftListView(collection: @tasks_draft)
+    @inProgressListView = new TaskManager.Views.Tasks.InProgressListView(collection: @tasks_in_progress)
+    @finishedistView = new TaskManager.Views.Tasks.FinishedListView(collection: @tasks_finished)
 
-  show: (id) ->
-    task = @tasks.get(id)
-
-    @view = new TaskManager.Views.Tasks.ShowView(model: task)
-    $("#tasks").html(@view.render().el)
-
-  edit: (id) ->
-    task = @tasks.get(id)
-
-    @view = new TaskManager.Views.Tasks.EditView(model: task)
-    $("#tasks").html(@view.render().el)
+    $("#new_task").html(@view.render().el)
+    $("#task_draft").html(@draftView.render().el)
+    $("#task_in_progress").html(@inProgressListView.render().el)
+    $("#task_finished").html(@finishedistView.render().el)
