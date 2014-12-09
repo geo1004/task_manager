@@ -1,17 +1,37 @@
 TaskManager.Views.Tasks ||= {}
 
 class TaskManager.Views.Tasks.FinishedView extends Backbone.View
-  template: JST["backbone/templates/tasks/finished"]
+  template: JST["backbone/templates/tasks/in_progress"]
+  template_delete: JST["backbone/templates/tasks/finished"]
 
-  initialize: () ->
-    # @listenTo @model, 'change:state', @add_to_right_column
+  initialize: ->
+    @listenTo @model, 'change', @render
 
   events:
-    "dblclick span.title" : "destroy"
-    "dblclick span.content" : "destroy"
+    "dblclick span.content" : "edit"
+    "dblclick span.title" : "edit"
     "drop": "update_state"
+    "keypress .edit > input": 'update'
+    "click i": "destroy"
 
   tagName: "li"
+
+  edit: ->
+    @$("div.edit").removeClass('hidden')
+    @$("div.show").addClass('hidden')
+
+  update: (e)->
+    if e.which == 13
+      @model.set({
+        title: @$('input').first().val(),
+        content: @$('input').last().val()
+      })
+      @model.save(null,
+        success: (task) =>
+          @model = task
+          @$("div.edit").addClass('hidden')
+          @$("div.show").removeClass('hidden')
+      )
 
   destroy: () ->
     @model.destroy()
@@ -41,5 +61,8 @@ class TaskManager.Views.Tasks.FinishedView extends Backbone.View
         )
 
   render: ->
-    @$el.html(@template(@model.toJSON() ))
+    if @model.get('state') == "finished"
+      @$el.html(@template_delete(@model.toJSON() ))
+    else
+      @$el.html(@template(@model.toJSON() ))
     return this

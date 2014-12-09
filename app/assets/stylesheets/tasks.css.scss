@@ -94,6 +94,12 @@ footer{
 }
 #finished-list{
   background-color: rgba(83, 192, 109, 0.68);
+  i{
+    float: right;
+    position: absolute;
+    margin-top: -32px;
+    margin-left: 4px;
+  }
 }
 #new_task{
   width: 80%;

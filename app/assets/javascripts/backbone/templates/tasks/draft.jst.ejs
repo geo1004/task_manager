@@ -1,1 +1,7 @@
-<span class='title'><%= title %></span><span class='content'><%= content %></span>
+<div class='show'>
+  <span class='title'><%= title %></span><span class='content'><%= content %></span>
+</div>
+<div class='edit hidden'>
+  <input type="text" class="form-control" name="title" id="title" value="<%= title %>" placeholder="Title">
+  <input type="text" class="form-control" name="content" id="content" value="<%= content %>" placeholder="Content">
+</div>

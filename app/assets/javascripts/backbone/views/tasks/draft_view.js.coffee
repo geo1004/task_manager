@@ -2,35 +2,42 @@ TaskManager.Views.Tasks ||= {}
 
 class TaskManager.Views.Tasks.DraftView extends Backbone.View
   template: JST["backbone/templates/tasks/draft"]
+  template_delete: JST["backbone/templates/tasks/finished"]
+
+  initialize: ->
+    @listenTo @model, 'change', @render
 
   events:
-    "click span.title" : "send_to_progress"
-    "click span.content" : "send_to_progress"
+    "dblclick span.content" : "edit"
+    "dblclick span.title" : "edit"
     "drop": "update_state"
+    "keypress .edit > input": 'update'
+    "click i": "destroy"
 
   tagName: "li"
 
-  send_to_progress: () ->
-    @model.set('state', 'inprogress')
-    @model.save(null,
-      success: (task) =>
-        @model = task
-    )
+  edit: ->
+    @$("div.edit").removeClass('hidden')
+    @$("div.show").addClass('hidden')
+
+  update: (e)->
+    if e.which == 13
+      @model.set({
+        title: @$('input').first().val(),
+        content: @$('input').last().val()
+      })
+      @model.save(null,
+        success: (task) =>
+          @model = task
+          @$("div.edit").addClass('hidden')
+          @$("div.show").removeClass('hidden')
+      )
+
+  destroy: () ->
+    @model.destroy()
     this.remove()
-    switch @model.get('state')
-      when 'draft'
-        view = new TaskManager.Views.Tasks.DraftView({model : @model})
-        $("#task_draft ul").append(view.render().el)
-      when 'inprogress'
-        view = new TaskManager.Views.Tasks.InProgressView({model : @model})
-        $("#task_in_progress ul").append(view.render().el)
-      when 'finished'
-        view = new TaskManager.Views.Tasks.FinishedView({model : @model})
-        $("#task_finished ul").append(view.render().el)
 
     return false
-
-
 
   update_state: (event, index) ->
     switch $(event.target).parent('ul').attr('id')
@@ -55,5 +62,8 @@ class TaskManager.Views.Tasks.DraftView extends Backbone.View
 
 
   render: ->
-    @$el.html(@template(@model.toJSON() ))
+    if @model.get('state') == "finished"
+      @$el.html(@template_delete(@model.toJSON() ))
+    else
+      @$el.html(@template(@model.toJSON() ))
     return this
